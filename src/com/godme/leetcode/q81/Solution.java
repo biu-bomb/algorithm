@@ -1,7 +1,5 @@
 package com.godme.leetcode.q81;
 
-import com.sun.org.apache.bcel.internal.generic.ARETURN;
-
 class Solution {
     public boolean search(int[] nums, int target) {
         return search(nums, 0, nums.length-1, target);
