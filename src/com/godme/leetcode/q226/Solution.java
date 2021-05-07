@@ -1,12 +1,13 @@
-package com.godme.leetcode.q100;
+package com.godme.leetcode.q226;
 
 
 class Solution {
-    public boolean isSameTree(TreeNode p, TreeNode q) {
-        if(p == null) return q == null;
-        if(q == null) return false;
-        if(p.val != q.val) return false;
-        return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+    public TreeNode invertTree(TreeNode root) {
+        if(root == null) return null;
+        TreeNode left = root.left;
+        root.left = invertTree(root.right);
+        root.right = invertTree(left);
+        return root;
     }
 }
 
