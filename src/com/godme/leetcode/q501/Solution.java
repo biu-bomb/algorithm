@@ -1,54 +1,34 @@
 package com.godme.leetcode.q501;
 
 
-import java.util.HashSet;
-import java.util.Set;
-
+import java.util.*;
 class Solution {
 
+    int maxCount = 0;
     public int[] findMode(TreeNode root) {
-        if(root == null) return new int[0];
-        connectRight(root);
-        root = findMin(root);
-        Set<Integer> collect = new HashSet<>();
-        int count = 0, maxCount = 0, currentValue = Integer.MAX_VALUE;
-        while (root != null){
-            if(currentValue == Integer.MAX_VALUE){
-
-            }
+        if (root == null) return new int[0];
+        Map<Integer, Integer> counter = new HashMap<>();
+        record(counter, root);
+        List<Integer> collect = new LinkedList<>();
+        counter.forEach((v, c)->{
+            if(c == maxCount) collect.add(v);
+        });
+        int[] res = new int[collect.size()];
+        for(int i = 0; i < res.length; i++){
+            res[i] = collect.get(i);
         }
-        return null;
+        return res;
     }
 
-
-    public void connectRight(TreeNode root){
-        TreeNode cursor;
-        while (root != null){
-            if(root.left != null){
-                cursor = root.left;
-                while (cursor.right != null && cursor.right!=root){
-                    cursor = cursor.right;
-                }
-                if(cursor.right == null){
-                    cursor.right = root;
-                    root = root.left;
-                } else {
-                    root = root.right;
-                }
-            } else {
-                root = root.right;
-            }
-        }
-    }
-
-    public TreeNode findMin(TreeNode root){
-        while(root.left != null){
-            root = root.left;
-        }
-        return root;
+    public void record(Map<Integer, Integer> counter, TreeNode node){
+        if(node == null) return;
+        int currentCount = counter.getOrDefault(node.val, 0) + 1;
+        maxCount = Math.max(maxCount, currentCount);
+        counter.put(node.val, currentCount);
+        record(counter, node.left);
+        record(counter, node.right);
     }
 }
-
 
 
 class TreeNode {
