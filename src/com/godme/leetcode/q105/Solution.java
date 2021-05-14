@@ -5,25 +5,24 @@ import java.util.Map;
 
 class Solution {
     private Map<Integer, Integer> inorderIndexMap;
-
-
+    int[] preorder, inorder;
     public TreeNode buildTree(int[] preorder, int[] inorder) {
-        inorderIndexMap = new HashMap<>();
-        for(int index = 0; index < inorder.length; index++){
-            inorderIndexMap.put(inorder[index], index);
+        this.preorder = preorder;
+        this.inorder = inorder;
+        for(int i = 0; i < inorder.length; i++){
+            inorderIndexMap.put(inorder[i], i);
         }
-        return buildTree(preorder, inorder, 0, preorder.length - 1, 0, inorder.length - 1);
+        return buildTree(0, preorder.length-1, 0, inorder.length-1);
     }
 
-    public TreeNode buildTree(int[] preorder, int[] inorder, int preorderLeft, int preorderRight, int inorderLeft, int inorderRight){
-        if(preorderLeft > preorderRight) return null;
-        int rootValue = preorder[preorderLeft];
-        int inorderRootIndex = inorderIndexMap.get(rootValue);
-        int leftMemberCount = inorderRootIndex - inorderLeft;
-        TreeNode root = new TreeNode(rootValue);
-        root.left = buildTree(preorder, inorder, preorderLeft+1, preorderLeft+leftMemberCount, inorderLeft, inorderRootIndex+1);
-        root.right = buildTree(preorder, inorder, preorderLeft+leftMemberCount+1, preorderRight, inorderRootIndex+1, inorderRight);
-        return root;
+    public TreeNode buildTree(int preLeft, int preRight, int inLeft, int inRight){
+        if(preLeft > preRight || inLeft > inRight) return null;
+        int rootValue = preorder[preLeft];
+        int nextRootInorderIndex = inorderIndexMap.get(preorder[preLeft]);
+        int leftLength = nextRootInorderIndex - inLeft;
+        return new TreeNode(rootValue,
+                buildTree(preLeft+1, preLeft+leftLength, inLeft, inLeft+leftLength),
+                buildTree(preLeft+leftLength+1, preRight, inLeft+leftLength+1, inRight));
     }
 }
 

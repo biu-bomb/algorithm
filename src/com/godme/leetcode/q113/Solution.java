@@ -26,7 +26,6 @@ class Solution {
         dfs(root.right, sum);
         path.pollLast();
     }
-
 }
 
 class TreeNode {

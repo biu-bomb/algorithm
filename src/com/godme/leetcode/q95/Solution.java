@@ -13,30 +13,22 @@ class Solution {
         return generateTrees(1, n);
     }
 
-    public List<TreeNode> generateTrees(int start, int end) {
-        // 不存在节点，null
-        List<TreeNode> allTrees = new LinkedList<>();
-        if (start > end) {
-            allTrees.add(null);
-            return allTrees;
+    public List<TreeNode> generateTrees(int start, int end){
+        List<TreeNode> res = new LinkedList<>();
+        if(start > end){
+            res.add(null);
+            return res;
         }
-        // root
-        for (int i = start; i <= end; i++) {
-            // left
-            List<TreeNode> leftTrees = generateTrees(start, i - 1);
-            // right
-            List<TreeNode> rightTrees = generateTrees(i + 1, end);
-            // 各种组合
-            for (TreeNode left : leftTrees) {
-                for (TreeNode right : rightTrees) {
-                    TreeNode currTree = new TreeNode(i);
-                    currTree.left = left;
-                    currTree.right = right;
-                    allTrees.add(currTree);
+
+        for(int i = start; i <= end; i++){
+            for(TreeNode left: generateTrees(start, i-1)){
+                for(TreeNode right: generateTrees(i+1, end)){
+                    res.add(new TreeNode(i, left, right));
                 }
             }
+
         }
-        return allTrees;
+        return res;
     }
 }
 class TreeNode {

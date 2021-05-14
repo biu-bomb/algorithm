@@ -25,8 +25,8 @@ class Solution {
         int inorderRootIndex = inorderIndexMap.get(rootValue);
         int leftMembersCount = inorderRootIndex - inorderLeft;
         TreeNode treeNode = new TreeNode(rootValue);
-        treeNode.left = buildTree(inorderLeft, inorderRootIndex, postOrderLeft, postOrderLeft+leftMembersCount-1);
-        treeNode.right = buildTree(inorderRootIndex, inorderRight, postOrderLeft+leftMembersCount, postOrderRight-1);
+        treeNode.left = buildTree(inorderLeft, inorderRootIndex-1, postOrderLeft, postOrderLeft+leftMembersCount-1);
+        treeNode.right = buildTree(inorderRootIndex+1, inorderRight, postOrderLeft+leftMembersCount, postOrderRight-1);
         return treeNode;
     }
 }

@@ -1,21 +1,22 @@
-package com.godme.leetcode.q102;
+package com.godme.leetcode.q107;
 
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 class Solution {
-    public List<List<Integer>> levelOrder(TreeNode root) {
-        List<List<Integer>> res = new ArrayList<>();
-        if (root == null) return res;
+    public List<List<Integer>> levelOrderBottom(TreeNode root) {
+        LinkedList<List<Integer>> res = new LinkedList<>();
+        if(root == null) return res;
         List<TreeNode> currentLine = new LinkedList<>();
         List<TreeNode> nextLine = new LinkedList<>(), temp;
+        List<Integer> values;
         currentLine.add(root);
-        List<Integer> line;
-        while(!currentLine.isEmpty()){
+        while (!currentLine.isEmpty()){
             nextLine.clear();
-            line = new LinkedList<>();
+            values = new LinkedList<>();
             for(TreeNode node: currentLine){
-                line.add(node.val);
+                values.add(node.val);
                 if(node.left != null){
                     nextLine.add(node.left);
                 }
@@ -23,7 +24,7 @@ class Solution {
                     nextLine.add(node.right);
                 }
             }
-            res.add(line);
+            res.addFirst(values);
             temp = currentLine;
             currentLine = nextLine;
             nextLine = temp;
@@ -31,6 +32,7 @@ class Solution {
         return res;
     }
 }
+
 
 class TreeNode {
     int val;
