@@ -3,31 +3,33 @@ package com.godme.leetcode.q230;
 
 
 public class Solution {
+    int order = 0, k, last= Integer.MIN_VALUE;
+    int target;
     public int kthSmallest(TreeNode root, int k) {
-        int order = 1;
-        TreeNode prev = null, curr;
-        while (root != null){
-            if(root.left != null){
-                curr = root.left;
-                while (curr.right != null && curr.right != root){
-                    curr = curr.right;
-                }
-                if(curr.right == null){
-                    curr.right = root;
-                    root = root.left;
-                    continue;
-                }
-            }
-            if(prev != null && prev.val < root.val){
-                order += 1;
-            }
-            if(order == k){
-                return root.val;
-            }
-            prev = root;
-            root = root.right;
+        this.k = k;
+        dfs(root);
+        return target;
+    }
+
+    public void dfs(TreeNode root){
+        if(root == null) return;
+        dfs(root.left);
+        if(root.val > last){
+            order += 1;
         }
-        return -1;
+        if(order == k){
+            target = root.val;
+            return;
+        }
+        if(order < k){
+            dfs(root.right);
+        }
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        TreeNode treeNode = new TreeNode(3, new TreeNode(1, null, new TreeNode(2)), new TreeNode(4));
+        System.err.println(solution.kthSmallest(treeNode, 1));
     }
 }
 
