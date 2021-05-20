@@ -7,7 +7,7 @@ import java.util.PriorityQueue;
 // 思路:
 //      1. 今天能开的哪些
 //      2. 优先提前结束的
-// 时间:
+// 时间: O(N logN)
 // 空间: O(n)
 class Solution {
     public int maxEvents(int[][] events) {
