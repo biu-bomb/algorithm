@@ -5,7 +5,7 @@ package com.godme.leetcode.q394;
 //      substring: 需要解码的子串
 //      suffix: 后续字符串
 // 时间: O(n)
-// 空间: O(n)
+// 空间: O(s)
 class Solution {
     public String decodeString(String s) {
         StringBuilder sb = new StringBuilder();
