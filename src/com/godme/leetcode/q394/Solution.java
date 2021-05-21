@@ -1,35 +1,49 @@
 package com.godme.leetcode.q394;
 
+// 思路: prefix + substring + suffix;
+//      prefix: 简单字符串
+//      substring: 需要解码的子串
+//      suffix: 后续字符串
+// 时间: O(n)
+// 空间: O(n)
 class Solution {
     public String decodeString(String s) {
-        // 无需解析
-        int left = s.indexOf('[');
-        if (left == -1) {
-            return s;
+        StringBuilder sb = new StringBuilder();
+        // suffix
+        int repeatIndex = 0, length = s.length();
+        while(repeatIndex < length && !Character.isDigit(s.charAt(repeatIndex))) repeatIndex++;
+        if(repeatIndex >= length) return s;
+        // append prefix
+        sb.append(s, 0, repeatIndex);
+        int repeatTimes = 0;
+        int subBegin = repeatIndex;
+        // repeat times
+        while(s.charAt(subBegin) != '['){
+            repeatTimes = repeatTimes * 10 + s.charAt(subBegin) - '0';
+            subBegin += 1;
         }
-        // 重复部分
-        int right = left + 1;
-        char currentChar;
-        for (int match = 1; match > 0; right++) {
-            currentChar = s.charAt(right);
-            match += currentChar == '[' ? 1 : currentChar == ']' ? -1 : 0;
+        // substring
+        int count = 1, subEnd = subBegin + 1;
+        while (count > 0){
+            if(s.charAt(subEnd) == '['){
+                count += 1;
+            } else if(s.charAt(subEnd) == ']'){
+                count -= 1;
+            }
+            subEnd += 1;
         }
-        // 重复次数
-        int np;
-        for (np = left - 1; np > 0 && (currentChar = s.charAt(np-1)) >= '0' && currentChar <= '9'; np--);
-        int repeatTimes = Integer.parseInt(s.substring(np, left));
-        StringBuilder repeatString = new StringBuilder();
-        // 重复
-        for (String atomRepeatString = decodeString(s.substring(left+1, right-1)); repeatTimes > 0; repeatTimes--){
-            repeatString.append(atomRepeatString);
+        // append repeat string
+        String repeatString = s.substring(subBegin+1, subEnd-1); // normal substring
+        repeatString = decodeString(repeatString); // decode
+        for(int i = 0; i < repeatTimes; i++){ // repeat
+            sb.append(repeatString);
         }
-        // prefix + repeat(decode(?)) + decode(suffix)
-        return s.substring(0, np) + repeatString.toString() + decodeString(s.substring(right));
-    }
-
-    public static void main(String[] args) {
-        Solution solution = new Solution();
-        String s = "3[a2[c]]";
-        System.err.println(solution.decodeString(s));
+        // suffix
+        if(subEnd < length){
+            String suffix = s.substring(subEnd); // suffix
+            suffix = decodeString(suffix); // decode
+            sb.append(suffix);
+        }
+        return sb.toString();
     }
 }
