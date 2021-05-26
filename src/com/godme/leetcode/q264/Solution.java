@@ -1,33 +1,52 @@
 package com.godme.leetcode.q264;
 
-class Solution {
-    // 未知长度或者超长数据，迭代生成
-    // 确定短长度，生成后查询
-    public int nthUglyNumber(int n) {
-        int[] results = new int[n+1];
-        results[1] = 1;
-        int p2 = 1, p3 =1, p5 = 1;
-        int r2, r3, r5, ri;
-        for (int i = 2; i <=n ; i++){
-            r2 = results[p2] * 2;
-            r3 = results[p3] * 3;
-            r5 = results[p5] * 5;
-            ri = Math.min(r2, Math.min(r3, r5));
-            if(ri == r2){
-                p2 += 1;
-            }
-            if(ri == r3){
-                p3 += 1;
-            }
-            if(ri == r5){
-                p5 += 1;
-            }
-            results[i] = ri;
-        }
-        return results[n];
-    }
+/**
+ * 题目中出现三种计算提示
+ *      1. 直接约束，单个数据的计算、 检测办法
+ *      2. 结果约束，基于先前结果计算后续结果
+ *      3. 因子约束，先前结果经过因子放大得到后续结果
+ *
+ * 多数题目中，基础的直接计算常导致条件复杂，计算困难。
+ * 可以进行维度拆分，分别进行维护：
+ *      1. 单个维度的维护十分简单
+ *      2. 多个维度综合时，由于已经维护，相当于O(1)的直接获取，独立维护综合逻辑
+ *      3. 单层依赖，直接计算新值，循环往复
+ *
+ *  不定起点: 这是大多题目比较迷惑的点，但是场景简单
+ *      1. 单独前向依赖: 以前一个，或者边界计算，单层维护
+ *      2. 少量分支依赖: 分支少，可直接枚举维护计算
+ */
 
-    public static void main(String[] args) {
-        System.err.println(new Solution().nthUglyNumber(10));
+// 思路: 基于计算链，分别维护因子起始点，选举新一轮的计算结果
+// 时间: O(n)
+// 空间: O(n)
+class Solution {
+    public int nthUglyNumber(int n) {
+        int[] cache = new int[n+1];
+        cache[1] = 1;
+        int i2 = 1, i3 =1, i5 = 1;
+        int u2, u3, u5, ui;
+        for (int i = 2; i <=n ; i++){
+            // 不同因子下的下一个丑数
+            u2 = cache[i2] * 2;
+            u3 = cache[i3] * 3;
+            u5 = cache[i5] * 5;
+            // 最小的才是下一个丑数
+            ui = Math.min(u2, Math.min(u3, u5));
+            // 结果匹配，存在多因子计算
+            // 匹配因子同时跃迁，消除重复计算影响
+            if(ui == u2){
+                i2 += 1;
+            }
+            if(ui == u3){
+                i3 += 1;
+            }
+            if(ui == u5){
+                i5 += 1;
+            }
+            // 结果记录
+            cache[i] = ui;
+        }
+        return cache[n];
     }
 }
