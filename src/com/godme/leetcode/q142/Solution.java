@@ -2,26 +2,26 @@ package com.godme.leetcode.q142;
 
 
 public class Solution {
-    // 2 * s_slow = s_fast
-    // 2(a+b) = a + n(b+c) + b
-    // a = c + (n-1)(b+c) : 分别从相遇点和头结点触发，最终会在入环点相遇
     public ListNode detectCycle(ListNode head) {
-        ListNode fast = head, slow = head;
-        while(fast != null){
-            if(fast.next == null || fast.next.next == null){
-                return null;
-            }
+        if(head == null || head.next == null) return null;
+        ListNode slow = head.next, fast = head.next.next;
+        while(fast != null && fast.next != null && fast != slow){
+            System.out.println(slow.val);
             fast = fast.next.next;
             slow = slow.next;
-            if(fast == slow){
-                while (head != slow){
-                    slow = slow.next;
-                    head = head.next;
-                }
-                return head;
-            }
         }
-        return null;
+        if(fast == null || fast.next == null) return null;
+        while(head != slow){
+            head = head.next;
+            slow = slow.next;
+        }
+        return head;
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        ListNode node = ListNode.fromNums(1,2,3);
+        System.err.println(solution.detectCycle(node));
     }
 }
 
@@ -31,6 +31,19 @@ class ListNode {
     ListNode(int x) {
         val = x;
         next = null;
+    }
+
+    static ListNode fromNums(int ...nums){
+        ListNode listNode = null, cursor = null;
+        for(int num: nums){
+            if(listNode == null){
+                cursor = listNode = new ListNode(num);
+            } else {
+                cursor.next = new ListNode(num);
+                cursor = cursor.next;
+            }
+        }
+        return listNode;
     }
 }
 
